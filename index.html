@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pin Match</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <style>
+        *{
+            box-sizing: border-box;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        body {
+            background: orangered;
+            height: 100vh;
+        }
+
+        .half-width {
+            height: 460px;
+            background: rgb(77, 70, 73);
+            padding: 30px;
+            text-align: center;
+            border-radius: 5px;
+        }
+
+        .generate-btn {
+            margin-top: 50px;
+            width: 150px;
+            padding: 50px;
+            border-radius: 50%;
+            border: 8px solid black;
+            background: orangered;
+            color: white;
+            font-weight: bold;
+            font-size: 22px;
+            text-align: center;
+        }
+
+        .generate-btn:focus {
+            outline: none;
+            box-shadow: none;
+        }
+
+        input[type="text"] {
+            background: white;
+            padding: 10px 0px;
+            color: black;
+            font-weight: bold;
+            font-size: large;
+            width: 60%;
+            margin: 0 auto;
+            border: 2px solid orangered;
+            height: 50px;
+            padding: 10px;
+        }
+
+        input[type="text"]:focus {
+            background: rgb(194, 187, 126);
+        }
+
+        .numbers {
+            margin: 30px 0;
+        }
+
+        .calc-typed {
+            margin-top: 20px;
+            font-size: 45px;
+            text-align: right;
+            color: black;
+        }
+
+        .calc-button-row {
+            width: 100%;
+        }
+
+        .button {
+            width: 20%;
+            background: orangered;
+            color: white;
+            padding: 16px 0;
+            margin: 5px;
+            display: inline-block;
+            font-size: large;
+            text-align: center;
+            vertical-align: middle;
+            margin-right: -4px;
+            border-radius: 15px;
+            cursor: pointer;
+        }
+
+        .blink-me {
+            color: yellow;
+        }
+
+        .submit-btn {
+            border: none;
+            margin-top: 20px;
+            padding: 10px 120px;
+            border-radius: 5px;
+            background: black;
+            color: white;
+            font-weight: bold;
+            
+        }
+
+        .notify {
+            color: white;
+            text-align: center;
+            margin: 0 auto;
+            background: red;
+            margin-top: 20px;
+            border-radius: 15px;
+            padding: 5px 20px;
+            display: none;
+        }
+
+        .notify-section {
+            width: 35%;
+            margin: 0 auto;
+        }
+
+        .action-left {
+            color: yellow;
+            margin-top: 10px;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="pin-genarator half-width">
+                    <input class="from-control" id="pin-shower" type="text"><br>
+                    <button id="pin-generate-btn"class="generate-btn">Pin</button>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="input-section half-width">
+                    <input id="calculator-display" class="form-control" type="text">
+                    <div class="numbers">
+                        <div class="clac-body">
+                            <div class="calc-button-row">
+                                <div class="button">1</div>
+                                <div class="button">2</div>
+                                <div class="button">3</div>
+                            </div>
+                            <div class="calc-button-row">
+                                <div class="button">4</div>
+                                <div class="button">5</div>
+                                <div class="button">6</div>
+                            </div>
+                            <div class="calc-button-row">
+                                <div class="button">7</div>
+                                <div class="button">8</div>
+                                <div class="button">9</div>
+                            </div>
+                            <div class="calc-button-row">
+                                <div class="button">AC</div>
+                                <div class="button">0</div>
+                                <div class="button">DELETE</div>
+                            </div>
+                            <div>
+                                <button id="submit-btn" type="submit" class="submit-btn">Submit</button>
+                                <p class="action-left"><span id="action-try">5</span>try left</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="notify-section">
+                <p id="error-notice" class="notify alert alert-danger alert-dismissible fade show">Didn't Match, Try Again Please! <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">Try</button></p>
+                <p id="success-notice" class="notify alert alert-danger alert-dismissible fade show">Pin Matched, Congrats! <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">Try</button></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const pinGenerateBtn = document.getElementById('pin-generate-btn');
+pinGenerateBtn.addEventListener('click', function() {
+    const randomNumber = Math.floor(1000 + Math.random() * 9000);
+    document.getElementById('pin-shower').value = randomNumber;
+})
+
+
+// const oneBtn = document.getElementById('one').addEventListener('click', function() {
+    
+// })
+
+function numberBtnFunction(btnId) {
+    let btnIdStr = btnId.toString();
+    let calculatorDisplay = document.getElementById('calculator-display');
+    let prevCalculatorDisplayValue = calculatorDisplay.value;
+    document.getElementById('calculator-display').value = prevCalculatorDisplayValue + btnIdStr;
+}
+
+function clearDisplay() {
+    document.getElementById('calculator-display').value = "";
+} 
+
+document.getElementById('submit-btn').addEventListener('click', function() {
+    const valueOfPinShower = document.getElementById('pin-shower').value;
+    const valueOfCalculatorDisplay = document.getElementById('calculator-display').value;
+    const successNotice = document.getElementById('success-notice');
+    const errorNotice = document.getElementById('error-notice');
+    if (valueOfPinShower == valueOfCalculatorDisplay) {
+        successNotice.style.display = 'block';
+        errorNotice.style.display = 'none';   
+    } else {
+        errorNotice.style.display = 'block';
+        successNotice.style.display = 'none';
+        let actionTry = document.getElementById('action-try').innerText;
+        let actionTryNumber = parseInt(actionTry);
+        actionTryNumber = actionTryNumber - 1;
+        if (actionTryNumber >= 0) {
+            document.getElementById('action-try').innerText = actionTryNumber;
+        }
+
+        if (actionTryNumber == 0 ) {
+            document.getElementById('submit-btn').disabled = true;
+        }
+    }
+
+    if (successNotice.style.display == 'block') {
+        document.getElementById('calculator-display').value = "";
+        document.getElementById('pin-shower').value = "";
+    }
+    
+})
+
+function deleteLastCharacter() {
+    const calculatorDisplayValue = document.getElementById('calculator-display').value;
+    const removedValue = calculatorDisplayValue.slice(0, calculatorDisplayValue.length - 1);
+    document.getElementById('calculator-display').value = removedValue;
+    console.log(calculatorDisplayValue);
+}
+
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+</body>
+</html>
